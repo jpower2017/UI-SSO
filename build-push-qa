@@ -1,0 +1,31 @@
+#!/bin/sh
+# Shortcut for building a specific docker image, with versionioning
+# NOTE:  The docker image name MUST be specified below, OR passed in on command line
+# This will also TARBALL the result for upload
+# Usage:  ./build
+react-scripts build
+
+image=$1
+
+gregorian=$(date +"%Y.%m.%d")
+
+H=$(date +"%H")
+M=$(date +"%M")
+S=$(date +"%S")
+
+seconds=`expr \( $H \* 3600 \) + \( $M \* 60 \) + $S`
+
+version="$gregorian.$seconds"
+
+echo "*** version: bscc/$image:$version"
+echo "*** building docker image"
+
+docker build -t "bscc/$image:$version" -t "bscc/$image:qa" .
+
+echo "*** Build Complete: bscc/$image:$version"
+echo "*** pushing image to Docker Hub"
+
+docker push bscc/$image:$version
+docker push bscc/$image:qa
+
+echo "*** Push Complete: bscc/$image:$version"
