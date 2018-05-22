@@ -9,6 +9,7 @@ import PinPad from "./PinPad/PinPad.js";
 
 class App extends Component {
   constructor(props) {
+    console.log("App constructor time: " + Date.now());
     super(props);
     this.state = {
       pinTrys: this.props.pinTrys,
@@ -70,11 +71,13 @@ class App extends Component {
 
   success() {
     console.log("success url " + this.state.firstTry);
+    this.setState({ showPin: false });
     this.props.action("success", this.state.firstTry);
     this.updateState(5);
   }
   successSingle(val) {
     console.log("successSingle val " + val);
+    //this.setState({ showPin: false });
     this.props.action("success", val);
     this.updateState(5);
   }

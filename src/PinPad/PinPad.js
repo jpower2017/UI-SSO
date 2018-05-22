@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "./pinpad.css";
+import * as R from "ramda";
 
 class PinPad extends Component {
   constructor(props) {
@@ -30,11 +31,31 @@ class PinPad extends Component {
         break;
     }
   };
+  /*convert numpad keycode to number keycode */
+  convertNumPad = n => {
+    let numPadData = [
+      { name: "numpad0", k: 96, val: 48 },
+      { name: "numpad1", k: 97, val: 49 },
+      { name: "numpad2", k: 98, val: 50 },
+      { name: "numpad3", k: 99, val: 51 },
+      { name: "numpad4", k: 100, val: 52 },
+      { name: "numpad5", k: 101, val: 53 },
+      { name: "numpad6", k: 102, val: 54 },
+      { name: "numpad7", k: 103, val: 55 },
+      { name: "numpad8", k: 104, val: 56 },
+      { name: "numpad9", k: 105, val: 57 }
+    ];
+    let convertedVal = R.prop("val", R.find(x => x.k == n, numPadData));
+    return convertedVal ? convertedVal : n;
+  };
   keyed = n => {
     console.log("keyed " + n);
-    console.log("is number? : " + Number(String.fromCharCode(n)));
-    console.log(Number(String.fromCharCode(n)) ? "yes" : "no");
-    Number(String.fromCharCode(n)) && this.addKeyNumber(String.fromCharCode(n));
+    console.log("converted convertNumPad " + this.convertNumPad(n));
+    let num = this.convertNumPad(n);
+    console.log("is number? : " + Number(String.fromCharCode(num)));
+    console.log(Number(String.fromCharCode(num)) ? "yes" : "no");
+    Number(String.fromCharCode(num)) &&
+      this.addKeyNumber(String.fromCharCode(num));
   };
 
   addKeyNumber = n => {
